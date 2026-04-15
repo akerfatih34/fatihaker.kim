@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Şirket Yapısı — Fatih Aker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:   #0a0a0a;
+      --ink2:  #111111;
+      --ink3:  #1a1a1a;
+      --gold:  #c9a84c;
+      --gold2: #e8c96a;
+      --smoke: #888880;
+      --mist:  #555550;
+      --cream: #d6cfc4;
+      --paper: #f2ede6;
+    }
+    html, body { width: 100%; background: transparent; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 1.5rem 5rem;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .header .label {
+      font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: .75rem;
+    }
+    .header .label::before,
+    .header .label::after { content: ''; flex: 0 0 28px; height: 1px; background: var(--gold); }
+    .header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 300; line-height: 1.1; color: #fff;
+    }
+    .header h2 em { font-style: italic; color: var(--gold); }
+    .header p {
+      font-size: .82rem; color: var(--smoke);
+      margin-top: .9rem; max-width: 480px; margin-left: auto; margin-right: auto;
+      line-height: 1.7; letter-spacing: .01em;
+    }
+
+    /* ── CHART WRAPPER ── */
+    .chart {
+      width: 100%;
+      max-width: 960px;
+      position: relative;
+    }
+
+    /* ── TOP NODE (Fatih Aker) ── */
+    .top-node {
+      display: flex; justify-content: center; margin-bottom: 0;
+      position: relative; z-index: 2;
+    }
+    .top-card {
+      background: linear-gradient(135deg, rgba(201,168,76,.18) 0%, rgba(201,168,76,.06) 100%);
+      border: 1px solid rgba(201,168,76,.5);
+      border-radius: 4px;
+      padding: 1.2rem 2.4rem;
+      text-align: center;
+      position: relative;
+      cursor: default;
+      transition: box-shadow .3s;
+    }
+    .top-card:hover { box-shadow: 0 0 32px rgba(201,168,76,.2); }
+    .top-card .role {
+      font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .35rem;
+    }
+    .top-card .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 400; color: #fff;
+      letter-spacing: .04em;
+    }
+    .top-card .title {
+      font-size: .7rem; color: var(--smoke); margin-top: .3rem;
+      letter-spacing: .06em;
+    }
+
+    /* ── SVG CONNECTORS ── */
+    .connectors {
+      width: 100%; overflow: visible;
+      display: block;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── GROUP NODE ── */
+    .group-node {
+      display: flex; justify-content: center;
+      position: relative; z-index: 2;
+      margin-top: -1px;
+    }
+    .group-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 4px;
+      padding: .8rem 2rem;
+      text-align: center;
+      cursor: default;
+      transition: border-color .3s;
+    }
+    .group-card:hover { border-color: rgba(201,168,76,.4); }
+    .group-card .g-label {
+      font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--smoke); margin-bottom: .2rem;
+    }
+    .group-card .g-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 600; color: var(--cream);
+      letter-spacing: .06em;
+    }
+
+    /* ── COMPANY CARDS ── */
+    .companies {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-top: 0;
+      position: relative; z-index: 2;
+    }
+    .co-card {
+      background: var(--ink2);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 4px;
+      padding: 1.4rem 1rem 1.2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .35s cubic-bezier(.25,.8,.25,1);
+      position: relative; overflow: hidden;
+    }
+    .co-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity .35s;
+    }
+    .co-card:hover {
+      border-color: rgba(201,168,76,.4);
+      background: rgba(201,168,76,.05);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.4);
+    }
+    .co-card:hover::before { opacity: 1; }
+    .co-card.active {
+      border-color: var(--gold);
+      background: rgba(201,168,76,.08);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(201,168,76,.15);
+    }
+    .co-card.active::before { opacity: 1; }
+
+    .co-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(201,168,76,.1);
+      border: 1px solid rgba(201,168,76,.25);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto .9rem;
+      font-size: 1.1rem;
+      transition: background .35s, border-color .35s;
+    }
+    .co-card:hover .co-icon,
+    .co-card.active .co-icon {
+      background: rgba(201,168,76,.2);
+      border-color: rgba(201,168,76,.5);
+    }
+
+    .co-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--cream); line-height: 1.2;
+      margin-bottom: .3rem;
+      letter-spacing: .03em;
+    }
+    .co-sector {
+      font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--smoke);
+    }
+
+    /* ── DETAIL PANEL ── */
+    .detail-panel {
+      margin-top: 2rem;
+      background: var(--ink2);
+      border: 1px solid rgba(201,168,76,.25);
+      border-radius: 4px;
+      padding: 2rem 2.4rem;
+      display: none;
+      animation: fadeSlide .35s ease;
+      position: relative;
+    }
+    .detail-panel.visible { display: flex; gap: 2.5rem; align-items: flex-start; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .detail-panel::before {
+      content: '';
+      position: absolute; top: 0; left: 2.4rem;
+      width: 60px; height: 1px;
+      background: var(--gold); opacity: .5;
+    }
+    .dp-icon {
+      font-size: 2.2rem; flex-shrink: 0; margin-top: .2rem;
+    }
+    .dp-body { flex: 1; }
+    .dp-tag {
+      font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .4rem;
+    }
+    .dp-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; color: #fff;
+      margin-bottom: .6rem;
+    }
+    .dp-desc {
+      font-size: .8rem; color: var(--smoke); line-height: 1.8;
+      max-width: 580px;
+    }
+    .dp-meta {
+      margin-top: 1rem;
+      display: flex; gap: 2rem; flex-wrap: wrap;
+    }
+    .dp-meta-item { }
+    .dp-meta-item .m-label {
+      font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--mist); margin-bottom: .15rem;
+    }
+    .dp-meta-item .m-val {
+      font-size: .78rem; color: var(--cream); font-weight: 500;
+    }
+    .dp-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: 1.1rem;
+      font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,.3);
+      padding-bottom: 2px;
+      transition: border-color .3s, color .3s;
+    }
+    .dp-link:hover { color: var(--gold2); border-color: var(--gold2); }
+    .dp-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--mist); font-size: .7rem; letter-spacing: .1em;
+      text-transform: uppercase; padding: .3rem .5rem;
+      transition: color .3s;
+    }
+    .dp-close:hover { color: var(--cream); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 750px) {
+      .companies { grid-template-columns: repeat(3, 1fr); }
+      .detail-panel.visible { flex-direction: column; gap: 1rem; }
+    }
+    @media (max-width: 500px) {
+      .companies { grid-template-columns: repeat(2, 1fr); }
+      body { padding: 2.5rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="label">Operasyonel Yapı</div>
+    <h2>Yönetilen <em>şirketler.</em></h2>
+    <p>Tokyay Grup bünyesindeki beş farklı şirkette eş zamanlı genel koordinatörlük ve yöneticilik.</p>
+  </div>
+
+  <div class="chart">
+
+    <!-- TOP NODE -->
+    <div class="top-node">
+      <div class="top-card">
+        <div class="role">Genel Koordinatör & Yönetici</div>
+        <div class="name">Fatih Aker</div>
+        <div class="title">5 Şirket · Çoklu Sektör Yönetimi</div>
+      </div>
+    </div>
+
+    <!-- SVG: top → group connector -->
+    <svg class="connectors" height="52" viewBox="0 0 100 52" preserveAspectRatio="none">
+      <line x1="50" y1="0" x2="50" y2="52"
+            stroke="rgba(201,168,76,0.35)" stroke-width="1" stroke-dasharray="4 3"/>
+    </svg>
+
+    <!-- GROUP NODE -->
+    <div class="group-node">
+      <div class="group-card">
+        <div class="g-label">Holding</div>
+        <div class="g-name">Tokyay Grup</div>
+      </div>
+    </div>
+
+    <!-- SVG: group → companies fan -->
+    <svg id="fan-svg" class="connectors" style="height:60px;" viewBox="0 0 1000 60" preserveAspectRatio="none">
+      <!-- lines drawn by JS -->
+    </svg>
+
+    <!-- COMPANY CARDS -->
+    <div class="companies" id="companies">
+
+      <div class="co-card" data-id="kereste" onclick="toggle('kereste')">
+        <div class="co-icon">🪵</div>
+        <div class="co-name">Tokyay Kereste</div>
+        <div class="co-sector">Kereste & Ahşap</div>
+      </div>
+
+      <div class="co-card" data-id="bahce" onclick="toggle('bahce')">
+        <div class="co-icon">🌿</div>
+        <div class="co-name">Tokyay Bahçe</div>
+        <div class="co-sector">Peyzaj & Bahçe</div>
+      </div>
+
+      <div class="co-card" data-id="lokanta" onclick="toggle('lokanta')">
+        <div class="co-icon">🍽️</div>
+        <div class="co-name">Tokyay Lokanta</div>
+        <div class="co-sector">Yiyecek & İçecek</div>
+      </div>
+
+      <div class="co-card" data-id="davet" onclick="toggle('davet')">
+        <div class="co-icon">🥂</div>
+        <div class="co-name">Tokyay Davet</div>
+        <div class="co-sector">Etkinlik & Organizasyon</div>
+      </div>
+
+      <div class="co-card" data-id="sut" onclick="toggle('sut')">
+        <div class="co-icon">🥛</div>
+        <div class="co-name">Tokyay Süt</div>
+        <div class="co-sector">Süt & Gıda Üretimi</div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL PANEL -->
+    <div class="detail-panel" id="detail-panel">
+      <button class="dp-close" onclick="closePanel()">✕ Kapat</button>
+      <div class="dp-icon" id="dp-icon"></div>
+      <div class="dp-body">
+        <div class="dp-tag" id="dp-tag"></div>
+        <div class="dp-name" id="dp-name"></div>
+        <div class="dp-desc" id="dp-desc"></div>
+        <div class="dp-meta" id="dp-meta"></div>
+        <a class="dp-link" id="dp-link" href="#" target="_blank" rel="noopener">
+          Web sitesini ziyaret et →
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /chart -->
+
+  <script>
+    const DATA = {
+      kereste: {
+        icon: '🪵',
+        tag: 'Kereste & Ahşap Sektörü',
+        name: 'Tokyay Kereste',
+        desc: 'Yapısal kereste ve ahşap ürünler alanında faaliyet gösteren Tokyay Kereste, EN 14081 standardı kapsamında CE Belgeli üretim süreçleriyle sektörde öne çıkmaktadır. Fatih Aker, kalite kontrol ve operasyonel koordinasyondan sorumlu genel yönetici sıfatıyla fabrika süreçlerini bizzat yönetmektedir.',
+        meta: [
+          { label: 'Sektör', val: 'Kereste & Ahşap' },
+          { label: 'Sertifika', val: 'EN 14081 CE Belgesi' },
+          { label: 'Rol', val: 'Genel Koordinatör' },
+        ],
+        url: 'https://tokyaykereste.com.tr',
+        urlLabel: 'tokyaykereste.com.tr',
+      },
+      bahce: {
+        icon: '🌿',
+        tag: 'Peyzaj & Bahçe Sektörü',
+        name: 'Tokyay Bahçe',
+        desc: 'Peyzaj tasarımı, bitki üretimi ve bahçecilik hizmetleri alanında hizmet veren Tokyay Bahçe, Tokyay Grup bünyesindeki doğa odaklı koludur. Operasyonel planlama ve kaynak koordinasyonu Fatih Aker tarafından yürütülmektedir.',
+        meta: [
+          { label: 'Sektör', val: 'Peyzaj & Bahçe' },
+          { label: 'Hizmet', val: 'Tasarım & Üretim' },
+          { label: 'Rol', val: 'Genel Koordinatör' },
+        ],
+        url: 'https://www.tokyaybahce.com',
+        urlLabel: 'tokyaybahce.com',
+      },
+      lokanta: {
+        icon: '🍽️',
+        tag: 'Yiyecek & İçecek Sektörü',
+        name: 'Tokyay Lokanta',
+        desc: 'Yerel mutfak anlayışını profesyonel hizmet kalitesiyle buluşturan Tokyay Lokanta, grubun yeme-içme alanındaki köklü markasıdır. Operasyon yönetimi ve şirketler arası koordinasyon Fatih Aker sorumluluğundadır.',
+        meta: [
+          { label: 'Sektör', val: 'Yiyecek & İçecek' },
+          { label: 'Hizmet', val: 'Restoran İşletmeciliği' },
+          { label: 'Rol', val: 'Genel Koordinatör' },
+        ],
+        url: 'https://www.facebook.com/tokyaylokanta/',
+        urlLabel: 'Sayfayı Görüntüle',
+      },
+      davet: {
+        icon: '🥂',
+        tag: 'Etkinlik & Organizasyon Sektörü',
+        name: 'Tokyay Davet',
+        desc: 'Düğün, nişan ve kurumsal organizasyon alanlarında kapsamlı etkinlik çözümleri sunan Tokyay Davet, grubun en dinamik iş kollarından biridir. Tüm etkinlik süreçlerinin koordinasyonu Fatih Aker liderliğinde yürütülmektedir.',
+        meta: [
+          { label: 'Sektör', val: 'Organizasyon & Catering' },
+          { label: 'Hizmet', val: 'Düğün & Kurumsal Etkinlik' },
+          { label: 'Rol', val: 'Genel Koordinatör' },
+        ],
+        url: 'https://www.instagram.com/tokyaydavet/',
+        urlLabel: 'Instagram Sayfası',
+      },
+      sut: {
+        icon: '🥛',
+        tag: 'Süt & Gıda Üretimi Sektörü',
+        name: 'Tokyay Süt',
+        desc: 'Süt ve süt ürünleri üretiminde faaliyet gösteren Tokyay Süt, grubun gıda üretim kolunu oluşturmaktadır. Isıl işlem süreçleri ve kalite yönetimi konusunda sertifikalı olan Fatih Aker, bu şirkette üretim koordinasyonu ve yönetim görevini üstlenmektedir.',
+        meta: [
+          { label: 'Sektör', val: 'Süt & Gıda Üretimi' },
+          { label: 'Sertifika', val: 'Isıl İşlem Operatörü' },
+          { label: 'Rol', val: 'Genel Koordinatör' },
+        ],
+        url: 'https://www.tokyaysut.com/',
+        urlLabel: 'tokyaysut.com',
+      },
+    };
+
+    let activeId = null;
+
+    function toggle(id) {
+      if (activeId === id) {
+        closePanel();
+        return;
+      }
+      // deactivate old
+      document.querySelectorAll('.co-card').forEach(c => c.classList.remove('active'));
+      // activate new
+      document.querySelector(`[data-id="${id}"]`).classList.add('active');
+      activeId = id;
+      showPanel(id);
+    }
+
+    function showPanel(id) {
+      const d = DATA[id];
+      document.getElementById('dp-icon').textContent = d.icon;
+      document.getElementById('dp-tag').textContent = d.tag;
+      document.getElementById('dp-name').textContent = d.name;
+      document.getElementById('dp-desc').textContent = d.desc;
+
+      const meta = document.getElementById('dp-meta');
+      meta.innerHTML = d.meta.map(m => `
+        <div class="dp-meta-item">
+          <div class="m-label">${m.label}</div>
+          <div class="m-val">${m.val}</div>
+        </div>
+      `).join('');
+
+      const link = document.getElementById('dp-link');
+      link.href = d.url;
+      link.textContent = d.urlLabel + ' →';
+
+      const panel = document.getElementById('detail-panel');
+      panel.classList.add('visible');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function closePanel() {
+      document.getElementById('detail-panel').classList.remove('visible');
+      document.querySelectorAll('.co-card').forEach(c => c.classList.remove('active'));
+      activeId = null;
+    }
+
+    // Draw fan SVG lines
+    function drawFan() {
+      const svg = document.getElementById('fan-svg');
+      const companies = document.getElementById('companies');
+      const cards = companies.querySelectorAll('.co-card');
+      const svgRect = svg.getBoundingClientRect();
+      const cardsRect = companies.getBoundingClientRect();
+
+      const vw = 1000; // viewBox width
+      const vh = 60;
+
+      svg.innerHTML = '';
+
+      const startX = vw / 2;
+      const startY = 0;
+
+      const cardW = cardsRect.width / cards.length;
+
+      cards.forEach((card, i) => {
+        const cardRect = card.getBoundingClientRect();
+        const centerX = cardRect.left - cardsRect.left + cardRect.width / 2;
+        const scaleX = vw / cardsRect.width;
+        const endX = centerX * scaleX;
+        const endY = vh;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const midY = vh * 0.5;
+        line.setAttribute('d', `M${startX},${startY} C${startX},${midY} ${endX},${midY} ${endX},${endY}`);
+        line.setAttribute('stroke', 'rgba(201,168,76,0.3)');
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('fill', 'none');
+        line.setAttribute('stroke-dasharray', '4 3');
+        svg.appendChild(line);
+
+        // dot at bottom
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', endX);
+        circle.setAttribute('cy', endY);
+        circle.setAttribute('r', '3');
+        circle.setAttribute('fill', 'rgba(201,168,76,0.5)');
+        svg.appendChild(circle);
+      });
+
+      // dot at top
+      const topDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      topDot.setAttribute('cx', startX);
+      topDot.setAttribute('cy', startY);
+      topDot.setAttribute('r', '3');
+      topDot.setAttribute('fill', 'rgba(201,168,76,0.5)');
+      svg.appendChild(topDot);
+    }
+
+    window.addEventListener('load', () => { setTimeout(drawFan, 100); });
+    window.addEventListener('resize', drawFan);
+  </script>
+</body>
+</html>
