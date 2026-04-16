@@ -1,0 +1,55 @@
+# ═══ JEKYLL BLOG KONFİGÜRASYONU — fatihaker.kim ═══
+
+# Site Bilgileri
+title: "Fatih Aker"
+description: "Fabrika Müdürü, Genel Koordinatör & Tokyay Grup — Gönen, Balıkesir. Üretim, liderlik ve endüstri üzerine düşünceler."
+url: "https://fatihaker.kim"
+baseurl: ""
+
+# Yazar
+author:
+  name: "Fatih Aker"
+  email: "akerfatih34@gmail.com"
+  location: "Gönen, Balıkesir"
+  title: "Genel Koordinatör & Fabrika Müdürü"
+
+# Dil
+lang: tr
+
+# Permalink yapısı — /blog/2026/04/15/baslik/
+permalink: /blog/:year/:month/:day/:title/
+
+# Blog klasörü
+collections_dir: .
+
+# Jekyll build ayarları
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+# Dosyalar dahil / hariç
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - "*.sh"
+
+# Plugin'ler (GitHub Pages destekli)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Sayfalama
+paginate: 10
+paginate_path: "/blog/page:num/"
+
+# Feed
+future: false
+show_drafts: false
