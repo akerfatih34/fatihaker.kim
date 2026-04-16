@@ -486,9 +486,12 @@ description: "${desc.replace(/"/g, '\\"')}"
 
       if (res.ok) {
         const postUrl = `/blog/${date.replace(/-/g,'/')}/${slug}/`;
+        // Sitemap'i otomatik güncelle
+        setStatus('Sitemap güncelleniyor…', 'info');
+        await updateSitemap(token, postUrl, date);
         resultEl.className = 'publish-result';
         resultEl.style.display = 'block';
-        resultText.innerHTML = `✅ Yazı başarıyla yayınlandı!<br><br>
+        resultText.innerHTML = `✅ Yazı başarıyla yayınlandı! Sitemap otomatik güncellendi.<br><br>
           GitHub Pages 1-2 dakika içinde build alacak. Yazı linki:<br>
           <a href="${postUrl}" target="_blank">fatihaker.kim${postUrl}</a>`;
         setStatus(`"${title}" başarıyla yayınlandı.`, 'success');
@@ -501,6 +504,51 @@ description: "${desc.replace(/"/g, '\\"')}"
       resultEl.style.display = 'block';
       resultText.innerHTML = `❌ Hata: ${e.message}<br><br>Token'ın "Contents: Write" iznine sahip olduğundan emin olun.`;
       setStatus(`Hata: ${e.message}`, 'error');
+    }
+  }
+
+  // ── SİTEMAP OTOMATİK GÜNCELLE ───────────────────────────────────
+  async function updateSitemap(token, postUrl, date) {
+    try {
+      const apiBase = `https://api.github.com/repos/${CONFIG.repo}/contents/sitemap.xml`;
+      // Mevcut sitemap'i al
+      const getRes = await fetch(apiBase, {
+        headers: { 'Authorization': `token ${token}` }
+      });
+      if (!getRes.ok) return; // sitemap yoksa sessizce geç
+      const getData = await getRes.json();
+      const currentXml = decodeURIComponent(escape(atob(getData.content.replace(/\n/g,''))));
+
+      // Yeni URL girdisini oluştur
+      const newEntry = `
+  <url>
+    <loc>https://fatihaker.kim${postUrl}</loc>
+    <lastmod>${date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+
+      // </urlset> kapanış etiketinin hemen öncesine ekle
+      const updatedXml = currentXml.replace('</urlset>', newEntry + '\n\n</urlset>');
+      const encoded = btoa(unescape(encodeURIComponent(updatedXml)));
+
+      // Güncellenmiş sitemap'i commit et
+      await fetch(apiBase, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Sitemap güncellendi: ${postUrl}`,
+          content: encoded,
+          sha: getData.sha,
+          branch: CONFIG.branch
+        })
+      });
+    } catch (e) {
+      console.warn('Sitemap güncellenemedi:', e);
+      // Hata sitemap için kritik değil, yazı yine de yayınlandı
     }
   }
 
