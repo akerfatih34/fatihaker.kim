@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yönetim Paneli | Fatih Aker</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0a0a0a; --ink2: #111111; --ink3: #1a1a1a;
+      --gold: #c9a84c; --gold2: #e8c96a;
+      --smoke: #888880; --mist: #555550; --cream: #d6cfc4;
+      --red: #e05555; --green: #55a868;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: flex; }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh; align-items: center; justify-content: center;
+      background: var(--ink);
+    }
+    .login-box {
+      width: 100%; max-width: 420px; padding: 3rem;
+      background: var(--ink2); border: 1px solid rgba(255,255,255,.08);
+      border-top: 3px solid var(--gold); border-radius: 4px;
+    }
+    .login-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--cream);
+      text-align: center; margin-bottom: .5rem;
+    }
+    .login-sub {
+      font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--mist); text-align: center; margin-bottom: 2.5rem;
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block; font-size: .68rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--smoke); margin-bottom: .5rem;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: var(--ink3); border: 1px solid rgba(255,255,255,.1);
+      color: var(--cream); padding: .75rem 1rem; border-radius: 3px;
+      font-family: 'Inter', sans-serif; font-size: .9rem;
+      transition: border-color .3s; outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--gold);
+    }
+    .form-group select option { background: var(--ink3); }
+    .btn {
+      width: 100%; padding: .85rem; border: none; border-radius: 3px;
+      font-family: 'Inter', sans-serif; font-size: .75rem;
+      letter-spacing: .12em; text-transform: uppercase; font-weight: 500;
+      cursor: pointer; transition: all .3s;
+    }
+    .btn-gold { background: var(--gold); color: var(--ink); }
+    .btn-gold:hover { background: var(--gold2); }
+    .btn-outline { background: transparent; color: var(--smoke); border: 1px solid rgba(255,255,255,.12); margin-top: .75rem; }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-danger:hover { opacity: .85; }
+    .login-error {
+      background: rgba(224,85,85,.12); border: 1px solid rgba(224,85,85,.3);
+      color: var(--red); padding: .75rem 1rem; border-radius: 3px;
+      font-size: .82rem; margin-bottom: 1rem; display: none;
+    }
+
+    /* ── ADMIN PANEL ── */
+    #adminScreen { flex-direction: column; min-height: 100vh; }
+    .admin-header {
+      background: var(--ink2); border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .admin-brand {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--cream);
+    }
+    .admin-brand span { color: var(--gold); }
+    .header-actions { display: flex; gap: .75rem; align-items: center; }
+    .badge {
+      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--mist); border: 1px solid rgba(255,255,255,.1);
+      padding: .3rem .75rem; border-radius: 2px;
+    }
+    .btn-sm {
+      padding: .4rem 1rem; font-size: .65rem; letter-spacing: .1em;
+      text-transform: uppercase; border: none; border-radius: 3px;
+      cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500;
+      transition: all .3s;
+    }
+    .btn-sm-gold { background: var(--gold); color: var(--ink); }
+    .btn-sm-gold:hover { background: var(--gold2); }
+    .btn-sm-outline { background: transparent; color: var(--smoke); border: 1px solid rgba(255,255,255,.12); }
+    .btn-sm-outline:hover { color: var(--red); border-color: var(--red); }
+
+    /* ── EDITOR LAYOUT ── */
+    .admin-body { display: grid; grid-template-columns: 320px 1fr; flex: 1; }
+    .sidebar {
+      background: var(--ink2); border-right: 1px solid rgba(255,255,255,.06);
+      padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+    }
+    .sidebar-title {
+      font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .5rem; padding-bottom: .75rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .editor-area { padding: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .form-group textarea {
+      min-height: 420px; resize: vertical;
+      font-family: 'Courier New', monospace; font-size: .88rem; line-height: 1.7;
+    }
+    .char-count { font-size: .68rem; color: var(--mist); text-align: right; margin-top: .25rem; }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: var(--ink2); border-top: 1px solid rgba(255,255,255,.06);
+      padding: .75rem 2rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .status-msg { font-size: .78rem; flex: 1; }
+    .status-msg.success { color: var(--green); }
+    .status-msg.error { color: var(--red); }
+    .status-msg.info { color: var(--smoke); }
+
+    /* ── TOKEN MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.8);
+      display: none; align-items: center; justify-content: center; z-index: 200;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--ink2); border: 1px solid rgba(255,255,255,.08);
+      border-top: 3px solid var(--gold); border-radius: 4px;
+      padding: 2.5rem; width: 100%; max-width: 480px;
+    }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+      color: var(--cream); margin-bottom: .5rem;
+    }
+    .modal-desc { font-size: .82rem; color: var(--smoke); line-height: 1.7; margin-bottom: 1.5rem; }
+    .modal-desc a { color: var(--gold); }
+    .modal-actions { display: flex; gap: .75rem; margin-top: 1.25rem; }
+    .modal-actions button { flex: 1; }
+
+    /* ── PUBLISH RESULT ── */
+    .publish-result {
+      background: rgba(85,168,104,.1); border: 1px solid rgba(85,168,104,.3);
+      border-radius: 4px; padding: 1.25rem 1.5rem; margin-top: 1rem; display: none;
+    }
+    .publish-result.error { background: rgba(224,85,85,.1); border-color: rgba(224,85,85,.3); }
+    .publish-result p { font-size: .85rem; line-height: 1.7; }
+    .publish-result a { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      .admin-body { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">Fatih Aker</div>
+    <div class="login-sub">Blog Yönetim Paneli</div>
+    <div class="login-error" id="loginError">Kullanıcı adı veya şifre hatalı.</div>
+    <div class="form-group">
+      <label>Kullanıcı Adı</label>
+      <input type="text" id="username" placeholder="fatih" autocomplete="username" />
+    </div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-gold" onclick="doLogin()">Giriş Yap</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ADMIN SCREEN
+══════════════════════════════════════════ -->
+<div id="adminScreen" class="screen">
+
+  <div class="admin-header">
+    <div class="admin-brand">Fatih Aker · <span>Blog Paneli</span></div>
+    <div class="header-actions">
+      <span class="badge" id="tokenStatus">Token: Yok</span>
+      <button class="btn-sm btn-sm-gold" onclick="openTokenModal()">GitHub Token</button>
+      <a href="/blog/" target="_blank" style="text-decoration:none;">
+        <button class="btn-sm btn-sm-outline">Blogu Aç ↗</button>
+      </a>
+      <button class="btn-sm btn-sm-outline" onclick="doLogout()">Çıkış</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- SIDEBAR: POST META -->
+    <div class="sidebar">
+      <div class="sidebar-title">Yazı Bilgileri</div>
+
+      <div class="form-group">
+        <label>Başlık *</label>
+        <input type="text" id="postTitle" placeholder="Yazının başlığı..." oninput="updateSlug()" />
+      </div>
+
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="postCategory">
+          <option value="Düşünceler">Düşünceler</option>
+          <option value="Kalite & Standartlar">Kalite &amp; Standartlar</option>
+          <option value="Yapay Zeka & Üretim">Yapay Zeka &amp; Üretim</option>
+          <option value="Liderlik">Liderlik</option>
+          <option value="İngilizce Öğrenimi">İngilizce Öğrenimi</option>
+          <option value="Vaka Analizi">Vaka Analizi</option>
+          <option value="Üretim">Üretim</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Etiketler (virgülle ayırın)</label>
+        <input type="text" id="postTags" placeholder="üretim, liderlik, fabrika" />
+      </div>
+
+      <div class="form-group">
+        <label>Kısa Açıklama (SEO)</label>
+        <input type="text" id="postDesc" placeholder="Google'da görünecek açıklama..." />
+      </div>
+
+      <div class="form-group">
+        <label>Okuma Süresi (dakika)</label>
+        <input type="number" id="postReadTime" value="5" min="1" max="60" />
+      </div>
+
+      <div class="form-group">
+        <label>URL Slug (otomatik)</label>
+        <input type="text" id="postSlug" placeholder="otomatik-olusturulur" style="color:var(--mist); font-size:.8rem;" />
+      </div>
+
+      <div class="form-group">
+        <label>Yayın Tarihi</label>
+        <input type="date" id="postDate" />
+      </div>
+    </div>
+
+    <!-- MAIN: MARKDOWN EDITOR -->
+    <div class="editor-area">
+      <div class="sidebar-title">Yazı İçeriği (Markdown)</div>
+
+      <div class="form-group" style="flex:1;">
+        <label>İçerik *</label>
+        <textarea id="postBody" placeholder="Yazınızı buraya yazın...
+
+## Başlık için ## kullanın
+### Alt başlık için ###
+
+**Kalın metin** için çift yıldız
+*İtalik* için tek yıldız
+
+> Alıntı için > işareti
+
+- Madde listesi için tire
+
+Paragraflar arasında boş satır bırakın." oninput="updateCharCount()"></textarea>
+        <div class="char-count"><span id="charCount">0</span> karakter</div>
+      </div>
+
+      <div style="display:flex; gap:.75rem;">
+        <button class="btn btn-gold" style="width:auto; padding:.75rem 2rem;" onclick="publishPost()">
+          🚀 Yayınla
+        </button>
+        <button class="btn btn-outline" style="width:auto; padding:.75rem 2rem;" onclick="previewMarkdown()">
+          👁 Önizle
+        </button>
+        <button class="btn btn-outline" style="width:auto; padding:.75rem 2rem;" onclick="clearForm()">
+          Temizle
+        </button>
+      </div>
+
+      <div id="publishResult" class="publish-result">
+        <p id="publishResultText"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="status-bar">
+    <span class="status-msg info" id="statusMsg">Hazır. Yeni bir yazı oluşturmak için formu doldurun.</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GITHUB TOKEN MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div class="modal-title">GitHub Token Ayarı</div>
+    <p class="modal-desc">
+      Yazıları doğrudan yayınlamak için bir GitHub Personal Access Token gereklidir.<br><br>
+      Token almak için:
+      <a href="https://github.com/settings/tokens/new" target="_blank">GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens</a><br><br>
+      İzinler: <strong>Contents: Read &amp; Write</strong> (sadece <strong>fatihaker.kim</strong> reposu için)<br><br>
+      Token bu tarayıcı sekmesinde şifreli olarak tutulur, sunucuya gönderilmez.
+    </p>
+    <div class="form-group">
+      <label>Personal Access Token</label>
+      <input type="password" id="tokenInput" placeholder="github_pat_..." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" onclick="saveToken()">Kaydet</button>
+      <button class="btn btn-outline" onclick="closeTokenModal()">İptal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── KONFİGÜRASYON ──────────────────────────────────────────────
+  const CONFIG = {
+    username: 'fatih',
+    // SHA-256 hash of "Tokyay2026!" — şifreyi değiştirmek için yeni hash girin
+    passwordHash: 'cb23a4f86f32695b34c5146e654ed7f17e257115833f4c29d3cf09d32093bee6',
+    repo: 'akerfatih34/fatihaker.kim',
+    branch: 'main'
+  };
+
+  // ── BAŞLANGIÇ ───────────────────────────────────────────────────
+  window.addEventListener('load', () => {
+    // Tarih alanını bugüne ayarla
+    document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
+    // Token kontrolü
+    updateTokenStatus();
+    // Enter ile giriş
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+
+  // ── GİRİŞ ───────────────────────────────────────────────────────
+  async function doLogin() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const hash = await sha256(pass);
+    if (user === CONFIG.username && hash === CONFIG.passwordHash) {
+      document.getElementById('loginScreen').classList.remove('active');
+      document.getElementById('adminScreen').classList.add('active');
+      document.getElementById('loginError').style.display = 'none';
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('adminScreen').classList.remove('active');
+    document.getElementById('loginScreen').classList.add('active');
+    document.getElementById('password').value = '';
+  }
+
+  async function sha256(msg) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // ── TOKEN ────────────────────────────────────────────────────────
+  function openTokenModal() {
+    const existing = sessionStorage.getItem('ghToken') || '';
+    document.getElementById('tokenInput').value = existing;
+    document.getElementById('tokenModal').classList.add('active');
+  }
+  function closeTokenModal() {
+    document.getElementById('tokenModal').classList.remove('active');
+  }
+  function saveToken() {
+    const t = document.getElementById('tokenInput').value.trim();
+    if (t) {
+      sessionStorage.setItem('ghToken', t);
+      updateTokenStatus();
+      setStatus('GitHub token kaydedildi. Yazı yayınlamaya hazır.', 'success');
+    }
+    closeTokenModal();
+  }
+  function updateTokenStatus() {
+    const has = !!sessionStorage.getItem('ghToken');
+    const el = document.getElementById('tokenStatus');
+    el.textContent = has ? 'Token: ✓ Aktif' : 'Token: Yok';
+    el.style.color = has ? 'var(--green)' : 'var(--red)';
+  }
+
+  // ── SLUG ─────────────────────────────────────────────────────────
+  function updateSlug() {
+    const title = document.getElementById('postTitle').value;
+    const slug = slugify(title);
+    document.getElementById('postSlug').value = slug;
+  }
+  function slugify(text) {
+    const map = { 'ç':'c','ğ':'g','ı':'i','İ':'i','ö':'o','ş':'s','ü':'u','Ç':'c','Ğ':'g','Ö':'o','Ş':'s','Ü':'u' };
+    return text.toLowerCase()
+      .replace(/[çğışöüÇĞİŞÖÜ]/g, m => map[m] || m)
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim().replace(/\s+/g, '-')
+      .replace(/-+/g, '-').substring(0, 60);
+  }
+
+  // ── CHAR COUNT ───────────────────────────────────────────────────
+  function updateCharCount() {
+    document.getElementById('charCount').textContent =
+      document.getElementById('postBody').value.length.toLocaleString('tr');
+  }
+
+  // ── STATUS ───────────────────────────────────────────────────────
+  function setStatus(msg, type = 'info') {
+    const el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = `status-msg ${type}`;
+  }
+
+  // ── YAYINLA ──────────────────────────────────────────────────────
+  async function publishPost() {
+    const token = sessionStorage.getItem('ghToken');
+    if (!token) {
+      openTokenModal();
+      setStatus('Önce GitHub token girmeniz gerekiyor.', 'error');
+      return;
+    }
+
+    const title = document.getElementById('postTitle').value.trim();
+    const body  = document.getElementById('postBody').value.trim();
+    if (!title || !body) {
+      setStatus('Başlık ve içerik alanları zorunludur.', 'error');
+      return;
+    }
+
+    const date      = document.getElementById('postDate').value;
+    const slug      = document.getElementById('postSlug').value || slugify(title);
+    const category  = document.getElementById('postCategory').value;
+    const tagsRaw   = document.getElementById('postTags').value;
+    const desc      = document.getElementById('postDesc').value;
+    const readTime  = document.getElementById('postReadTime').value;
+
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+    const tagYaml = tags.length ? `[${tags.map(t=>`${t}`).join(', ')}]` : '[]';
+
+    const filename = `${date}-${slug}.md`;
+    const frontmatter = `---
+layout: post
+title: "${title.replace(/"/g, '\\"')}"
+date: ${date}
+category: "${category}"
+tags: ${tagYaml}
+read_time: ${readTime}
+description: "${desc.replace(/"/g, '\\"')}"
+---\n\n`;
+
+    const content = frontmatter + body;
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+
+    setStatus('Yayınlanıyor…', 'info');
+    const resultEl = document.getElementById('publishResult');
+    const resultText = document.getElementById('publishResultText');
+    resultEl.style.display = 'none';
+
+    try {
+      const url = `https://api.github.com/repos/${CONFIG.repo}/contents/_posts/${filename}`;
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Yeni yazı: ${title}`,
+          content: encoded,
+          branch: CONFIG.branch
+        })
+      });
+
+      if (res.ok) {
+        const postUrl = `/blog/${date.replace(/-/g,'/')}/${slug}/`;
+        resultEl.className = 'publish-result';
+        resultEl.style.display = 'block';
+        resultText.innerHTML = `✅ Yazı başarıyla yayınlandı!<br><br>
+          GitHub Pages 1-2 dakika içinde build alacak. Yazı linki:<br>
+          <a href="${postUrl}" target="_blank">fatihaker.kim${postUrl}</a>`;
+        setStatus(`"${title}" başarıyla yayınlandı.`, 'success');
+      } else {
+        const err = await res.json();
+        throw new Error(err.message || 'API hatası');
+      }
+    } catch (e) {
+      resultEl.className = 'publish-result error';
+      resultEl.style.display = 'block';
+      resultText.innerHTML = `❌ Hata: ${e.message}<br><br>Token'ın "Contents: Write" iznine sahip olduğundan emin olun.`;
+      setStatus(`Hata: ${e.message}`, 'error');
+    }
+  }
+
+  // ── ÖNİZLE ───────────────────────────────────────────────────────
+  function previewMarkdown() {
+    const body = document.getElementById('postBody').value;
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html><html><head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: Georgia, serif; max-width: 720px; margin: 4rem auto; padding: 0 2rem; line-height: 1.9; color: #222; }
+        h1,h2,h3 { font-weight: 400; margin: 2rem 0 .75rem; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: .5rem; }
+        blockquote { border-left: 3px solid #c9a84c; margin: 2rem 0; padding: 1rem 1.5rem; background: #fafafa; }
+        code { background: #f4f4f4; padding: .2em .4em; border-radius: 3px; font-size: .88em; }
+        ul, ol { margin: 0 0 1.5rem 1.5rem; }
+      </style>
+    </head><body>${markdownToHtml(body)}</body></html>`);
+  }
+
+  function markdownToHtml(md) {
+    return md
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+      .replace(/^---$/gm, '<hr>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(?!<[h|b|u|o|l|h])/gm, '')
+      .replace(/([^>])\n/g, '$1<br>');
+  }
+
+  // ── TEMİZLE ──────────────────────────────────────────────────────
+  function clearForm() {
+    if (!confirm('Formu temizlemek istediğinize emin misiniz?')) return;
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postBody').value = '';
+    document.getElementById('postTags').value = '';
+    document.getElementById('postDesc').value = '';
+    document.getElementById('postSlug').value = '';
+    document.getElementById('postReadTime').value = '5';
+    document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('charCount').textContent = '0';
+    document.getElementById('publishResult').style.display = 'none';
+    setStatus('Form temizlendi.', 'info');
+  }
+</script>
+
+</body>
+</html>
