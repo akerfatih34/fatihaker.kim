@@ -1,0 +1,13 @@
+# fatihaker.kim — robots.txt
+User-agent: *
+Allow: /
+
+# Gereksiz dosyaları taratma
+Disallow: /admin/
+Disallow: /*.yml$
+Disallow: /Gemfile$
+
+# Sitemap erişimine izin ver
+Allow: /sitemap.xml
+
+Sitemap: https://fatihaker.kim/sitemap.xml
