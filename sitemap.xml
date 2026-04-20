@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
+  <!-- Ana Sayfa -->
   <url>
     <loc>https://fatihaker.kim/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://fatihaker.kim/profile_hero.jpg</image:loc>
+      <image:title>Fatih Aker — Fabrika Müdürü ve Genel Koordinatör, Gönen Balıkesir</image:title>
+    </image:image>
   </url>
 
+  <!-- Blog -->
   <url>
     <loc>https://fatihaker.kim/blog/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <!-- Blog Yazısı: EN 14081 -->
   <url>
-    <loc>https://fatihaker.kim/blog/2026/04/15/gonende-yapay-zeka-ve-uretim/</loc>
-    <lastmod>2026-04-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-
-  <url>
-    <loc>https://fatihaker.kim/blog/2026/04/16/en14081-sertifikasyon-surecinde-ogrendiklerim/</loc>
-    <lastmod>2026-04-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-
-  <url>
-    <loc>https://fatihaker.kim/blog/2026/04/16/balikesirde-gida-uretimi-firsatlar-ve-zorluklar/</loc>
+    <loc>https://fatihaker.kim/blog/en14081-sertifikasyon/</loc>
     <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
