@@ -2,13 +2,14 @@
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
   <!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HFXBB74L5S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-HFXBB74L5S');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HFXBB74L5S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HFXBB74L5S');
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -578,31 +579,94 @@
     [data-reveal="left"] { transform: translateX(-40px); }
     [data-reveal="left"].visible { transform: none; }
 
+    /* ─── HAMBURGEr MENU ─── */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: .5rem; background: none; border: none;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--cream); border-radius: 2px;
+      transition: all .3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,10,10,.97); z-index: 99;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1.5rem; font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--cream); text-decoration: none; transition: color .3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-menu-close {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      font-size: 1.5rem; color: var(--smoke); cursor: pointer;
+      background: none; border: none; line-height: 1;
+    }
+
     /* ─── RESPONSIVE ─── */
+    * { max-width: 100%; }
+    img, svg, video { max-width: 100%; height: auto; }
+
     @media (max-width: 900px) {
       nav { padding: 1.25rem 1.5rem; }
       .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
       .hero { grid-template-columns: 1fr; }
-      .hero-left { padding: 7rem 1.5rem 4rem; }
-      .hero-right { height: 55vw; }
-      section { padding: 5rem 1.5rem; }
+      .hero-left { padding: 6rem 1.5rem 3rem; justify-content: flex-start; margin-top: 2rem; }
+      .hero-right { height: 60vw; min-height: 240px; }
+      section { padding: 4rem 1.5rem; }
       .bio-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .companies-list { grid-template-columns: repeat(3,1fr); }
+      .companies-list { grid-template-columns: repeat(2,1fr); }
       .career-entry { grid-template-columns: 1fr; }
       .career-time { text-align: left; padding: 0 0 1rem 3rem; }
       .skills-cols { grid-template-columns: 1fr; }
-      .featured-company { grid-template-columns: 1fr; }
+      .featured-company { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.75rem; }
       footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .org-chart { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .org-connectors { display: none; }
+      .org-companies { display: grid !important; grid-template-columns: 1fr 1fr !important;
+        gap: .75rem !important; margin-top: 1.5rem !important;
+        position: static !important; height: auto !important; }
+      .org-company-card { position: static !important; transform: none !important;
+        width: auto !important; }
+      .org-group-node { margin: 1rem auto !important; }
+      .manifesto { padding: 5rem 1.5rem; }
+      .manifesto blockquote { font-size: clamp(1.4rem, 5vw, 2rem); }
+      h1 { font-size: clamp(3rem, 12vw, 5rem); }
     }
     @media (max-width: 580px) {
-      .companies-list { grid-template-columns: repeat(2,1fr); }
+      .companies-list { grid-template-columns: 1fr 1fr; }
       .cert-grid { grid-template-columns: 1fr; }
+      .hero-social { flex-wrap: wrap; gap: 1rem; }
+      .feat-icon { font-size: 2rem; }
+      section { padding: 3.5rem 1.25rem; }
+      .org-companies { grid-template-columns: 1fr !important; }
+      h1 { font-size: clamp(2.8rem, 14vw, 4rem); }
     }
   </style>
 </head>
 <body>
 
 <div class="cursor" id="cursor"></div>
+
+<!-- ─── MOBİL MENÜ ─── -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+  <a href="#hakkimda" onclick="closeMobileMenu()">Hakkımda</a>
+  <a href="#firmalar" onclick="closeMobileMenu()">Firmalar</a>
+  <a href="#kariyer" onclick="closeMobileMenu()">Kariyer</a>
+  <a href="#belgeler" onclick="closeMobileMenu()">Belgeler</a>
+  <a href="#iletisim" onclick="closeMobileMenu()">İletişim</a>
+  <a href="/blog/" style="color:var(--gold)">Blog</a>
+</div>
 
 <!-- ─── NAV ─── -->
 <nav id="nav">
@@ -615,6 +679,9 @@
     <li><a href="#iletisim">İletişim</a></li>
     <li><a href="/blog/" style="color:var(--gold)">Blog</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ─── HERO ─── -->
@@ -1026,6 +1093,20 @@
 </footer>
 
 <script>
+  // Hamburger Menü
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn  = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   // Cursor
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
